@@ -52,3 +52,4 @@ fabric.properties
 
 # Virtual Environment
 venv/
+env/
