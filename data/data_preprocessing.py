@@ -50,8 +50,25 @@ def create_preprocessed_csv():
     database.neighborhood = neighborhood_le.transform(np.array(database.neighborhood).tolist())
     database.day_of_week = day_of_week_le.transform(np.array(database.day_of_week).tolist())
 
-    data.victims = data.victims.fillna(0)
+    database = database.join(pd.get_dummies(database.occur_time, prefix="hour"))
+    database = database.join(pd.get_dummies(database.occur_day, prefix="day"))
+    database = database.join(pd.get_dummies(database.occur_month, prefix="month"))
+    database = database.join(pd.get_dummies(database.day_of_week, prefix="week"))
 
-    df = database.filter(['rpt_month', 'rpt_day', 'occur_month', 'occur_day', 'occur_time', 'location', 'victims', 'day_of_week', 'crime', 'neighborhood'], axis=1)
+    database.victims = database.victims.fillna(0)
+
+    df = database.filter(['occur_month', 'occur_day', 'occur_time', 'location', 
+        'victims', 'day_of_week', 'crime', 'neighborhood'], axis=1)
+
+    df = df.join(pd.get_dummies(df.occur_time, prefix="hour"))
+    df = df.join(pd.get_dummies(df.occur_day, prefix="day"))
+    df = df.join(pd.get_dummies(df.occur_month, prefix="month"))
+    df = df.join(pd.get_dummies(df.day_of_week, prefix="week"))
+
 
     df.to_csv("preprocessed_data.csv", sep=',')
+
+    # print(database.head())
+
+if __name__ == '__main__':
+    create_preprocessed_csv()
