@@ -18,7 +18,7 @@ def convert_neighborhoods( database ):
 def encode_classifier(data, label):
     le = preprocessing.LabelEncoder()
     le.fit(database[label].unique().tolist())
-    
+
     return le.transform(database[label].tolist())
 
 
@@ -57,7 +57,7 @@ def create_preprocessed_csv():
 
     database.victims = database.victims.fillna(0)
 
-    df = database.filter(['occur_month', 'occur_day', 'occur_time', 'location', 
+    df = database.filter(['occur_month', 'occur_day', 'occur_time', 'location',
         'victims', 'day_of_week', 'crime', 'neighborhood'], axis=1)
 
     df = df.join(pd.get_dummies(df.occur_time, prefix="hour"))
@@ -67,8 +67,6 @@ def create_preprocessed_csv():
 
 
     df.to_csv("preprocessed_data.csv", sep=',')
-
-    # print(database.head())
 
 if __name__ == '__main__':
     create_preprocessed_csv()
